@@ -137,11 +137,17 @@ function nextQuestion() {
   current++;
   loadQuestion();
 }
-
+function restartQuiz() {
+  shuffled = quizData.sort(() => Math.random() - 0.5);
+  current = 0;
+  score = 0;
+  loadQuestion();
+ }
 loadQuestion();
 </script>
 
 </body>
 </html>
+
 
 
