@@ -1,56 +1,51 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
-<title>Ronak's Random GK Challenge</title>
+<title>GK Quiz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body {
-  background: #111;
-  color: white;
-  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
+  padding: 10px;
+  background: #111;
+  font-family: Arial, sans-serif;
+  color: white;
 }
 
 .quiz-container {
+  max-width: 280px;
+  margin: 30px auto;
   background: #1e1e1e;
-  padding: 20px;
-  border-radius: 15px;
-  width: 100%;
-  max-width: 380px;
-  text-align: center;
-  margin-top: 40px;
-  box-shadow: 0 0 15px rgba(255,0,0,0.3);
+  padding: 15px;
+  border-radius: 10px;
 }
 
 h1 {
-  font-size: 22px;
-  margin-bottom: 15px;
+  font-size: 18px;
+  text-align: center;
 }
 
-h3 {
-  font-size: 16px;
+#question {
+  font-size: 14px;
+  margin: 10px 0;
 }
 
 button {
   width: 100%;
-  padding: 10px;
-  margin: 6px 0;
+  padding: 7px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 6px;
   background: crimson;
   color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-}
-
-button:hover {
-  background: darkred;
+  font-size: 13px;
 }
 
 #score {
-  margin-top: 10px;
-  font-size: 14px;
+  font-size: 13px;
+  margin-top: 8px;
+  text-align: center;
 }
 </style>
 </head>
@@ -58,41 +53,55 @@ button:hover {
 <body>
 
 <div class="quiz-container">
-  <h1>Random GK Quiz</h1>
-  <h3 id="question"></h3>
+  <h1>GK Quiz</h1>
+  <div id="question"></div>
   <div id="answers"></div>
-  <h3 id="score"></h3>
+  <div id="score"></div>
 </div>
 
 <script>
-
 const quizData = [
-{q:"What is the capital of India?", a:["Mumbai","Delhi","Kolkata","Chennai"], c:1},
-{q:"Who invented the telephone?", a:["Edison","Newton","Alexander Graham Bell","Tesla"], c:2},
+{q:"Capital of India?", a:["Mumbai","Delhi","Kolkata","Chennai"], c:1},
 {q:"Largest planet?", a:["Earth","Mars","Jupiter","Saturn"], c:2},
 {q:"Fastest land animal?", a:["Tiger","Cheetah","Lion","Leopard"], c:1},
-{q:"Currency of Japan?", a:["Yuan","Won","Yen","Ringgit"], c:2},
 {q:"Who discovered gravity?", a:["Einstein","Newton","Galileo","Tesla"], c:1},
-{q:"Smallest continent?", a:["Asia","Europe","Australia","Africa"], c:2},
-{q:"Which gas do plants absorb?", a:["Oxygen","Nitrogen","Carbon Dioxide","Helium"], c:2},
-{q:"Largest ocean?", a:["Indian","Pacific","Atlantic","Arctic"], c:1},
-{q:"Who wrote Hamlet?", a:["Shakespeare","Dickens","Tagore","Milton"], c:0},
-{q:"National sport of Japan?", a:["Cricket","Sumo","Football","Baseball"], c:1},
-{q:"H2O is?", a:["Oxygen","Hydrogen","Water","Salt"], c:2},
-{q:"How many continents?", a:["5","6","7","8"], c:2},
-{q:"Tallest mountain?", a:["K2","Everest","Kanchenjunga","Makalu"], c:1},
-{q:"First man on moon?", a:["Yuri Gagarin","Neil Armstrong","Buzz Aldrin","Rakesh Sharma"], c:1}
+{q:"H2O is?", a:["Oxygen","Hydrogen","Water","Salt"], c:2}
 ];
 
-let shuffled = quizData.sort(() => 0.5 - Math.random());
+let shuffled = quizData.sort(() => Math.random() - 0.5);
 let current = 0;
 let score = 0;
+let timer;
+let timeLeft = 15;
 
-function loadQuestion(){
-  if(current >= shuffled.length){
+function startTimer() {
+  timeLeft = 15;
+  updateDisplay();
+
+  timer = setInterval(() => {
+    timeLeft--;
+    updateDisplay();
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+function updateDisplay() {
+  document.getElementById("score").innerText =
+    "Time: " + timeLeft + "s | Score: " + score;
+}
+
+function loadQuestion() {
+  clearInterval(timer);
+
+  if (current >= shuffled.length) {
     document.getElementById("question").innerText = "Quiz Finished!";
     document.getElementById("answers").innerHTML = "";
-    document.getElementById("score").innerText = "Your Score: " + score + "/15";
+    document.getElementById("score").innerText =
+      "Final Score: " + score + "/" + shuffled.length;
     return;
   }
 
@@ -100,23 +109,27 @@ function loadQuestion(){
   document.getElementById("question").innerText = q.q;
 
   let answersHTML = "";
-  q.a.forEach((option,index)=>{
-    answersHTML += `<button onclick="checkAnswer(${index})">${option}</button><br>`;
+  q.a.forEach((option, index) => {
+    answersHTML += `<button onclick="checkAnswer(${index})">${option}</button>`;
   });
 
   document.getElementById("answers").innerHTML = answersHTML;
+
+  startTimer();
 }
 
-function checkAnswer(index){
-  if(index === shuffled[current].c){
-    score++;
-  }
+function checkAnswer(index) {
+  clearInterval(timer);
+  if (index === shuffled[current].c) score++;
+  nextQuestion();
+}
+
+function nextQuestion() {
   current++;
   loadQuestion();
 }
 
 loadQuestion();
-
 </script>
 
 </body>
