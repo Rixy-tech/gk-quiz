@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ronak's Random GK Challenge</title>
+<style>
+body {
+  background: #111;
+  color: white;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.quiz-container {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  margin-top: 40px;
+  box-shadow: 0 0 15px rgba(255,0,0,0.3);
+}
+
+h1 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+h3 {
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0;
+  background: crimson;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+button:hover {
+  background: darkred;
+}
+
+#score {
+  margin-top: 10px;
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="quiz-container">
+  <h1>Random GK Quiz</h1>
+  <h3 id="question"></h3>
+  <div id="answers"></div>
+  <h3 id="score"></h3>
+</div>
+
+<script>
+
+const quizData = [
+{q:"What is the capital of India?", a:["Mumbai","Delhi","Kolkata","Chennai"], c:1},
+{q:"Who invented the telephone?", a:["Edison","Newton","Alexander Graham Bell","Tesla"], c:2},
+{q:"Largest planet?", a:["Earth","Mars","Jupiter","Saturn"], c:2},
+{q:"Fastest land animal?", a:["Tiger","Cheetah","Lion","Leopard"], c:1},
+{q:"Currency of Japan?", a:["Yuan","Won","Yen","Ringgit"], c:2},
+{q:"Who discovered gravity?", a:["Einstein","Newton","Galileo","Tesla"], c:1},
+{q:"Smallest continent?", a:["Asia","Europe","Australia","Africa"], c:2},
+{q:"Which gas do plants absorb?", a:["Oxygen","Nitrogen","Carbon Dioxide","Helium"], c:2},
+{q:"Largest ocean?", a:["Indian","Pacific","Atlantic","Arctic"], c:1},
+{q:"Who wrote Hamlet?", a:["Shakespeare","Dickens","Tagore","Milton"], c:0},
+{q:"National sport of Japan?", a:["Cricket","Sumo","Football","Baseball"], c:1},
+{q:"H2O is?", a:["Oxygen","Hydrogen","Water","Salt"], c:2},
+{q:"How many continents?", a:["5","6","7","8"], c:2},
+{q:"Tallest mountain?", a:["K2","Everest","Kanchenjunga","Makalu"], c:1},
+{q:"First man on moon?", a:["Yuri Gagarin","Neil Armstrong","Buzz Aldrin","Rakesh Sharma"], c:1}
+];
+
+let shuffled = quizData.sort(() => 0.5 - Math.random());
+let current = 0;
+let score = 0;
+
+function loadQuestion(){
+  if(current >= shuffled.length){
+    document.getElementById("question").innerText = "Quiz Finished!";
+    document.getElementById("answers").innerHTML = "";
+    document.getElementById("score").innerText = "Your Score: " + score + "/15";
+    return;
+  }
+
+  let q = shuffled[current];
+  document.getElementById("question").innerText = q.q;
+
+  let answersHTML = "";
+  q.a.forEach((option,index)=>{
+    answersHTML += `<button onclick="checkAnswer(${index})">${option}</button><br>`;
+  });
+
+  document.getElementById("answers").innerHTML = answersHTML;
+}
+
+function checkAnswer(index){
+  if(index === shuffled[current].c){
+    score++;
+  }
+  current++;
+  loadQuestion();
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
